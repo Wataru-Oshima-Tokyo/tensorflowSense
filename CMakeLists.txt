@@ -1,9 +1,6 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(tensorflowSense)
 
-## Compile as C++11, supported in ROS Kinetic and newer
-# add_compile_options(-std=c++11)
-
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
@@ -123,10 +120,21 @@ include_directories(
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/tensorflowSense.cpp
 # )
+#add_executable(tensorNode scripts/tensorflowSense.py)
+#target_link_libraries(tensorNode ${catkin_LIBRARIES})
 
 catkin_install_python(PROGRAMS scripts/tensorflowSense.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
+
+
+#install(TARGETS tensorNode
+#  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+# LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+#  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+#)
+
+
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
