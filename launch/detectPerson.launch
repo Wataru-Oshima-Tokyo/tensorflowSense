@@ -1,0 +1,11 @@
+<launch>
+
+  <arg name="tensorflowPKG" default="$(find tensorflowSense)/Sample_TFLite_model/" />
+
+  <include file="$(find realsense2_camera)/launch/rs_camera.launch">
+   <arg name="align_depth" value="true" />
+  </include>
+  <node name="tensorflowSense" pkg="tensorflowSense" type="tensorflowSense_Person.py" clear_params="true">
+	<param name="modeldir" value="$(arg tensorflowPKG)" /> 
+  </node>
+</launch>
