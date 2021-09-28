@@ -22,7 +22,7 @@ class Depth_Retriever():
         self.GRAPH_NAME = 'detect.tflite'
         self.LABELMAP_NAME = 'labelmap.txt'
         self.min_conf_threshold = float(0.5)
-        self.resW, self.resH = 1280, 720
+        self.resW, self.resH = 640, 480
         self.imW, self.imH = int(self.resW), int(self.resH)
         self.use_TPU = False
         # print(MODEL_NAME)
@@ -119,6 +119,7 @@ class Depth_Retriever():
         self.image_pub = rospy.Publisher('/camera/tensorflow/image_raw', Image, queue_size=1)
         self.person = rospy.Publisher('/camera/tensorflow/object', String, queue_size=1)
         self.depth = rospy.Publisher('/camera/tensorflow/distance', String, queue_size=1)
+
     def depthCallback(self, depth_pic):
      # Use cv_bridge() to convert the ROS image to OpenCV format
         try:
@@ -127,9 +128,13 @@ class Depth_Retriever():
             depth_array = np.array(self.depth_image, dtype=np.float32)
             center_idx = np.array(depth_array.shape) / 2
             x_mean, y_mean = (self.xmax+self.xmin) /2, (self.ymax+self.ymin)/ 2
+            if x_mean >640:
+                x_mean = 480
+            elif y_mean >480:
+                y_mean = 480
             # print ('center depth:', depth_array[center_idx[0], center_idx[1]])
             # print(depth_array[center_idx[0], center_idx[1]])
-            self.depth.publish(str(depth_array[int(self.xmin), int(self.ymin)]))
+            self.depth.publish(str(depth_array[int(x_mean), int(y_mean)]))
             # self.depth.publish(str(self.xmin))
         except cv_bridge.CvBridgeError:
             pass
@@ -188,11 +193,12 @@ class Depth_Retriever():
                         self.xmin = int(max(1,(boxes[i][1] * self.imW)))
                         self.ymax = int(min(self.imH,(boxes[i][2] * self.imH)))
                         self.xmax = int(min(self.imW,(boxes[i][3] * self.imW)))
+                        x_mean, y_mean = int((self.xmax+self.xmin) /2), int((self.ymax+self.ymin)/ 2)
                         category = 'yes'
                         labelSize, baseLine = cv.getTextSize(label, cv.FONT_HERSHEY_SIMPLEX, 0.7, 2) # Get font size
                         label_ymin = max(self.ymin, labelSize[1] + 10) # Make sure not to draw label too close to top of window
                         cv.rectangle(frame, (self.xmin,self.ymin), (self.xmax,self.ymax), (10, 255, 0), 2)
-                        # cv.rectangle(frame, (self.xmin,self.ymin), (self.xmax - self.xmin,self.ymax-self.ymin+10), (255, 255, 0), 2)
+                        cv.rectangle(frame, (x_mean,y_mean), (x_mean+10,y_mean+10), (255, 255, 0), 2)
                         cv.rectangle(frame, (self.xmin, label_ymin-labelSize[1]-10), (self.xmin+labelSize[0], label_ymin+baseLine-10), (255, 255, 255), cv.FILLED) # Draw white box to put label text in
                         cv.putText(frame, label, (self.xmin, label_ymin-7), cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 2) # Draw label text
 
