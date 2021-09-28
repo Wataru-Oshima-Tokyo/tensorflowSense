@@ -126,7 +126,8 @@ include_directories(
 catkin_install_python(PROGRAMS scripts/tensorflowSense.py scripts/tensorflowSense_Person.py scripts/depthSample.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
-
+add_executable(cmd_vel_Node src/getDistance_sendCmd.cpp)
+target_link_libraries(cmd_vel_Node ${catkin_LIBRARIES})
 
 #install(TARGETS tensorNode
 #  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
