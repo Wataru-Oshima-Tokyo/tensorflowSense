@@ -1,11 +1,11 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import os
 import argparse
 import sys
 import time
 from threading import Thread
-import importlib.util
+# import importlib.util
 from traceback import print_last
 from types import LambdaType
 import cv2 as cv
@@ -33,7 +33,12 @@ class Depth_Retriever():
         # Import TensorFlow libraries
         # If tflite_runtime is installed, import interpreter from tflite_runtime, else import from regular tensorflow
         # If using Coral Edge TPU, import the load_delegate library
-        pkg = importlib.util.find_spec('tflite_runtime')
+        
+        #it works if it is run on python3 but python2 dodes not have importlib.util
+        #so just make it false always
+
+        #pkg = importlib.util.find_spec('tflite_runtime')
+        pkg = False
         if pkg:
             from tflite_runtime.interpreter import Interpreter
             if self.use_TPU:
@@ -128,10 +133,10 @@ class Depth_Retriever():
             depth_array = np.array(self.depth_image, dtype=np.float32)
             center_idx = np.array(depth_array.shape) / 2
             x_mean, y_mean = (self.xmax+self.xmin) /2, (self.ymax+self.ymin)/ 2
-            if x_mean >640:
-                x_mean = 480
+            if x_mean >480:
+                x_mean = 479
             elif y_mean >480:
-                y_mean = 480
+                y_mean = 479
             # print ('center depth:', depth_array[center_idx[0], center_idx[1]])
             # print(depth_array[center_idx[0], center_idx[1]])
             self.depth.publish(str(depth_array[int(x_mean), int(y_mean)]))
