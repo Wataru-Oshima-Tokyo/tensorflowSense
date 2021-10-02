@@ -5,7 +5,7 @@ import argparse
 import sys
 import time
 from threading import Thread
-# import importlib.util
+import importlib.util
 from traceback import print_last
 from types import LambdaType
 import cv2 as cv
@@ -37,8 +37,8 @@ class Depth_Retriever():
         #it works if it is run on python3 but python2 dodes not have importlib.util
         #so just make it false always
 
-        #pkg = importlib.util.find_spec('tflite_runtime')
-        pkg = False
+        pkg = importlib.util.find_spec('tflite_runtime')
+        #pkg = False
         if pkg:
             from tflite_runtime.interpreter import Interpreter
             if self.use_TPU:
