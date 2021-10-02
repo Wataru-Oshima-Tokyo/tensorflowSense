@@ -8,7 +8,7 @@
 class getAndSend{
     public:
     getAndSend(){
-        cmd_vel_pub = n.advertise<geometry_msgs::Twist>("chatter", 1000);
+        cmd_vel_pub = n.advertise<geometry_msgs::Twist>("/camera/tensorflow/cmd_vel", 1000);
 
         distance_sub = n.subscribe("/camera/tensorflow/distance", 1000, &getAndSend::control_Callback, this);
     }
@@ -20,13 +20,15 @@ class getAndSend{
             try
             {
                 double distance = std::stod(msg->data.c_str());
-                if (distance < 500)
+                if (distance < 500 && distance > 100)
                 {
-                    cmd_vel.linear.x = 0;
+                    cmd_vel.linear.x = -1;
                 }
-                else if (distance > 500)
+                else if (distance > 800)
                 {
                     cmd_vel.linear.x = 1;
+                }else {
+                    cmd_vel.linear.x = 0;     
                 }
             }
             catch (const std::exception& e)
