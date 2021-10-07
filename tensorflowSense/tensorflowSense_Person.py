@@ -127,11 +127,11 @@ class Depth_Retriever(Node):
         self.bridge = cv_bridge.CvBridge()
 
         self.sub = self.create_subscription(Image,'/camera/color/image_raw', self.callback, 1)
-        #self.sub = rospy.Subscriber('/camera/depth/image_rect_raw', Image, self.callback)
-        self.sub = self.create_subscription( Image,'/camera/depth/image_rect_raw', self.depthCallback, 1)
+        # self.sub = self.create_subscription(Image, '/camera/depth/image_rect_raw',  self.callback, 1)
+        # self.sub = self.create_subscription(Image,'/camera/depth/image_rect_raw', self.depthCallback, 1)
         self.image_pub = self.create_publisher(Image,'/camera/tensorflow/image_raw',  1)
-        self.person = self.create_publisher( String,'/camera/tensorflow/object', 1)
-        self.depth = self.create_publisher( String,'/camera/tensorflow/distance', 1)
+        # self.person = self.create_publisher( String,'/camera/tensorflow/object', 1)
+        # self.depth = self.create_publisher( String,'/camera/tensorflow/distance', 1)
 
     def depthCallback(self, depth_pic):
      # Use cv_bridge() to convert the ROS image to OpenCV format
@@ -219,7 +219,7 @@ class Depth_Retriever(Node):
             cv.putText(frame,'FPS: {0:.2f}'.format(self.frame_rate_calc),(30,50),cv.FONT_HERSHEY_SIMPLEX,1,(255,255,0),2,cv.LINE_AA)
 
             # All the results have been drawn on the frame, so it's time to display it.
-            # cv.imshow('Object detector', frame)
+            cv.imshow('Object detector', frame)
             try:
                 size = str(np.array(frame, dtype=np.float32).shape)
 
