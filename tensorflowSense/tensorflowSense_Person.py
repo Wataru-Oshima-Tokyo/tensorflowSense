@@ -136,7 +136,8 @@ class Depth_Retriever(Node):
 
     def depthCallback(self, depth_pic):
      # Use cv_bridge() to convert the ROS image to OpenCV format
-        try:
+        try:  
+            msg = String()
             #Convert the depth image using the default passthrough encoding
             self.depth_image = self.bridge.imgmsg_to_cv2(depth_pic, desired_encoding="passthrough")
             depth_array = np.array(self.depth_image, dtype=np.float32)
@@ -148,7 +149,8 @@ class Depth_Retriever(Node):
                 y_mean = 479
             # print ('center depth:', depth_array[center_idx[0], center_idx[1]])
             # print(depth_array[center_idx[0], center_idx[1]])
-            #self.depth.publish(str(depth_array[int(x_mean), int(y_mean)]))
+            msg.data = str(depth_array[int(x_mean), int(y_mean)])
+            #self.depth.publish(msg)
             # self.depth.publish(str(self.xmin))
         except cv_bridge.CvBridgeError:
             pass
@@ -156,6 +158,7 @@ class Depth_Retriever(Node):
 
     def callback(self,ros_pics):
         try: 
+            msg = String()
             t1 = cv.getTickCount()
             my_image = self.bridge.imgmsg_to_cv2(ros_pics, desired_encoding = "bgr8")
             #my_image = ros_numpy.numpify(ros_pics)
@@ -224,8 +227,8 @@ class Depth_Retriever(Node):
             cv.imshow('Object detector', frame)
             try:
                 size = str(np.array(frame, dtype=np.float32).shape)
-
-                self.person.publish(str(self.xmax))
+                msg.data = size
+                self.person.publish(msg)
             except:
                 pass
             self.image_pub.publish(self.bridge.cv2_to_imgmsg(frame))
