@@ -25,6 +25,7 @@ class Depth_Retriever(Node):
         try:
             self.MODEL_NAME = str(self.get_parameter('modeldir').value)
         except:
+            print("not found")
             self.MODEL_NAME = ""
         print(self.MODEL_NAME)
         self.GRAPH_NAME = 'detect.tflite'
@@ -127,11 +128,11 @@ class Depth_Retriever(Node):
         self.bridge = cv_bridge.CvBridge()
 
         self.sub = self.create_subscription(Image,'/camera/color/image_raw', self.callback, 1)
-        # self.sub = self.create_subscription(Image, '/camera/depth/image_rect_raw',  self.callback, 1)
-        # self.sub = self.create_subscription(Image,'/camera/depth/image_rect_raw', self.depthCallback, 1)
+        self.sub = self.create_subscription(Image, '/camera/depth/image_rect_raw',  self.callback, 1)
+        self.sub = self.create_subscription(Image,'/camera/depth/image_rect_raw', self.depthCallback, 1)
         self.image_pub = self.create_publisher(Image,'/camera/tensorflow/image_raw',  1)
-        # self.person = self.create_publisher( String,'/camera/tensorflow/object', 1)
-        # self.depth = self.create_publisher( String,'/camera/tensorflow/distance', 1)
+        self.person = self.create_publisher( String,'/camera/tensorflow/object', 1)
+        self.depth = self.create_publisher( String,'/camera/tensorflow/distance', 1)
 
     def depthCallback(self, depth_pic):
      # Use cv_bridge() to convert the ROS image to OpenCV format
@@ -147,7 +148,7 @@ class Depth_Retriever(Node):
                 y_mean = 479
             # print ('center depth:', depth_array[center_idx[0], center_idx[1]])
             # print(depth_array[center_idx[0], center_idx[1]])
-            self.depth.publish(str(depth_array[int(x_mean), int(y_mean)]))
+            #self.depth.publish(str(depth_array[int(x_mean), int(y_mean)]))
             # self.depth.publish(str(self.xmin))
         except cv_bridge.CvBridgeError:
             pass
@@ -157,6 +158,7 @@ class Depth_Retriever(Node):
         try: 
             t1 = cv.getTickCount()
             my_image = self.bridge.imgmsg_to_cv2(ros_pics, desired_encoding = "bgr8")
+            #my_image = ros_numpy.numpify(ros_pics)
             # cv.imshow('Object detector', my_image)
             # frame1 = videostream.read()
             frame1 = my_image
@@ -236,11 +238,11 @@ class Depth_Retriever(Node):
             cv.waitKey(1) 
         except cv_bridge.CvBridgeError as e:
             print("CvBridge could not convert images from realsense to opencv")
-        height,width, channels = my_image.shape
-        my_height = my_image.shape[0]
+        #height,width, channels = my_image.shape
+        #my_height = my_image.shape[0]
         # print(my_height)
 
-        self.vert_len = ros_pics.height # retrieve height information from Image msg
+        #self.vert_len = ros_pics.height # retrieve height information from Image msg
         # print(self.vert_len)
 
 # def startup(tfFolder):

@@ -5,7 +5,7 @@
 
   <!-- args that can be set from the command line or a default will be used -->
   <!--arg name="modeldirPKG" default="$(find-pkg-share tensorflowSense)/Sample_TFLite_model/"/-->
-  <arg name="modeldirPKG" default="/home/ubuntux86/ros2_foxy/src/tensorflowSense/Sample_TFLite_model/"/>
+  <arg name="modeldirPKG" default="/home/ubuntu18x86/ros2_foxy/src/tensorflowSense/Sample_TFLite_model/"/>
 
   <!-- start a turtlesim_node in the turtlesim1 namespace -->
   <node pkg="tensorflowSense" exec="detectPerson" name="detectPerson" namespace="tensorflow">
