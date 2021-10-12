@@ -150,7 +150,7 @@ class Depth_Retriever(Node):
             # print ('center depth:', depth_array[center_idx[0], center_idx[1]])
             # print(depth_array[center_idx[0], center_idx[1]])
             msg.data = str(depth_array[int(x_mean), int(y_mean)])
-            #self.depth.publish(msg)
+            self.depth.publish(msg)
             # self.depth.publish(str(self.xmin))
         except cv_bridge.CvBridgeError:
             pass
