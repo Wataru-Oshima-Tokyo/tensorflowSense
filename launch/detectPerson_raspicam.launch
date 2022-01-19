@@ -1,1 +1,19 @@
+<launch>
 
+  <arg name="tensorflowPKG" default="$(find tensorflowSense)/Sample_TFLite_model/" />
+
+    <include file="$(find raspicam_node)/launch/camerav2_410x308_30fps.launch"></include>
+    
+    <node name="image_transport" 
+          pkg="image_transport" 
+          type="republish" 
+          respawn="false" 
+          output="screen"
+          args="compressed in:=/raspicam_node/image raw out:=/camera/color/image_raw" />
+  
+  <node name="detectPerson" pkg="tensorflowSense" type="tensorflowSense_Person_raspicam.py" clear_params="true">
+	<param name="modeldir" value="$(arg tensorflowPKG)" /> 
+  </node>
+
+
+</launch>
